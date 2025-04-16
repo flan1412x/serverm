@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TextInput, Button, Group, Paper, Title } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import type { Asignatura } from "@/types/asignatura"
@@ -12,7 +12,12 @@ interface AsignaturaFormProps {
   onCancel?: () => void
 }
 
-export function AsignaturaForm({ onSubmit, initialValues, isEditing = false, onCancel }: AsignaturaFormProps) {
+export function AsignaturaForm({
+  onSubmit,
+  initialValues,
+  isEditing = false,
+  onCancel,
+}: AsignaturaFormProps) {
   const [submitting, setSubmitting] = useState(false)
 
   const form = useForm({
@@ -22,9 +27,20 @@ export function AsignaturaForm({ onSubmit, initialValues, isEditing = false, onC
     },
     validate: {
       id: (value) => (!value ? "El ID es obligatorio" : null),
-      asignatura: (value) => (!value ? "El nombre de la asignatura es obligatorio" : null),
+      asignatura: (value) =>
+        !value ? "El nombre de la asignatura es obligatorio" : null,
     },
   })
+
+  // ✅ Actualiza los campos automáticamente cuando cambian los initialValues
+  useEffect(() => {
+    if (initialValues) {
+      form.setValues({
+        id: initialValues.id,
+        asignatura: initialValues.asignatura,
+      })
+    }
+  }, [initialValues])
 
   const handleSubmit = async (values: Omit<Asignatura, "version">) => {
     setSubmitting(true)
@@ -45,28 +61,26 @@ export function AsignaturaForm({ onSubmit, initialValues, isEditing = false, onC
       </Title>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
-            
-      <TextInput
-      label="ID"
-      required
-      mb="md"
-      value={form.values.id}
-      disabled
-    />
-    <input type="hidden" name="id" value={form.values.id} />
-  
- 
-  <TextInput
-    label="ID"
-    placeholder="Ingrese el ID de la asignatura"
-    required
-    mb="md"
-    {...form.getInputProps("id")}
-  />
-
-
-
-
+        {isEditing ? (
+          <>
+            <TextInput
+              label="ID"
+              required
+              mb="md"
+              value={form.values.id}
+              disabled
+            />
+            <input type="hidden" name="id" value={form.values.id} />
+          </>
+        ) : (
+          <TextInput
+            label="ID"
+            placeholder="Ingrese el ID de la asignatura"
+            required
+            mb="md"
+            {...form.getInputProps("id")}
+          />
+        )}
 
         <TextInput
           label="Nombre de la Asignatura"
@@ -90,4 +104,3 @@ export function AsignaturaForm({ onSubmit, initialValues, isEditing = false, onC
     </Paper>
   )
 }
-

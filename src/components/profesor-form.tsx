@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { TextInput, Button, Group, Paper, Title } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import type { Profesor } from "@/types/profesor"
@@ -17,14 +17,24 @@ export function ProfesorForm({ onSubmit, initialValues, isEditing = false, onCan
 
   const form = useForm({
     initialValues: {
-      cedula: initialValues?.cedula || "",
-      nombre: initialValues?.nombre || "",
+      cedula: "",
+      nombre: "",
     },
     validate: {
       cedula: (value) => (!value ? "La cédula es obligatoria" : null),
       nombre: (value) => (!value ? "El nombre es obligatorio" : null),
     },
   })
+
+  // Cuando recibes nuevos initialValues, actualizas los valores del formulario
+  useEffect(() => {
+    if (initialValues) {
+      form.setValues({
+        cedula: initialValues.cedula,
+        nombre: initialValues.nombre,
+      })
+    }
+  }, [initialValues])
 
   const handleSubmit = async (values: Omit<Profesor, "version">) => {
     setSubmitting(true)
@@ -76,4 +86,3 @@ export function ProfesorForm({ onSubmit, initialValues, isEditing = false, onCan
     </Paper>
   )
 }
-

@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useState, useEffect } from "react"
 import { TextInput, Button, Group, Paper, Title, Select, Grid } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import type { ProfesorCicloInput } from "@/types/profesor-ciclo"
@@ -28,10 +28,10 @@ export function ProfesorCicloForm({
 
   const form = useForm({
     initialValues: {
-      id: initialValues?.id || "",
-      cedula: initialValues?.cedula || "",
-      id_asignaturas: initialValues?.id_asignaturas || "",
-      ciclo: initialValues?.ciclo || "",
+      id: "",
+      cedula: "",
+      id_asignaturas: "",
+      ciclo: "",
     },
     validate: {
       id: (value) => (!value ? "El ID es obligatorio" : null),
@@ -40,6 +40,18 @@ export function ProfesorCicloForm({
       ciclo: (value) => (!value ? "El ciclo es obligatorio" : null),
     },
   })
+
+  // Actualizar el formulario si initialValues cambia
+  useEffect(() => {
+    if (initialValues) {
+      form.setValues({
+        id: initialValues.id,
+        cedula: initialValues.cedula,
+        id_asignaturas: initialValues.id_asignaturas,
+        ciclo: initialValues.ciclo,
+      })
+    }
+  }, [initialValues])
 
   const handleSubmit = async (values: ProfesorCicloInput) => {
     setSubmitting(true)
@@ -53,7 +65,6 @@ export function ProfesorCicloForm({
     }
   }
 
-  // Preparar opciones para los selectores
   const profesoresOptions = profesores.map((prof) => ({
     value: prof.cedula,
     label: `${prof.cedula} - ${prof.nombre}`,
@@ -64,11 +75,10 @@ export function ProfesorCicloForm({
     label: `${asig.id} - ${asig.asignatura}`,
   }))
 
-  // Opciones para ciclos (podrían venir de una API o ser predefinidas)
   const ciclosOptions = [
-    { value: "MARZO 2021- AGOSTO 2021", label: " MARZO 2021- AGOSTO 2021" },
+    { value: "MARZO 2021- AGOSTO 2021", label: "MARZO 2021- AGOSTO 2021" },
     { value: "SEPTIEMBRE 2021 -FEBRERO 2022", label: "SEPTIEMBRE 2021 -FEBRERO 2022" },
-    { value: "MARZO 2022 - AGOSTO 2022", label: " ARZO 2022 - AGOSTO 2022" },
+    { value: "MARZO 2022 - AGOSTO 2022", label: "MARZO 2022 - AGOSTO 2022" },
     { value: "SEPTIEMBRE 2022 -FEBRERO 2023", label: "SEPTIEMBRE 2022 -FEBRERO 2023" },
   ]
 
@@ -141,4 +151,3 @@ export function ProfesorCicloForm({
     </Paper>
   )
 }
-

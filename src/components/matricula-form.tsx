@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TextInput, NumberInput, Button, Group, Paper, Title, Select, Grid } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import type { Matricula, MatriculaDetalle } from "@/types/matricula"
@@ -27,11 +27,11 @@ export function MatriculaForm({
 
   const form = useForm({
     initialValues: {
-      id: initialValues?.id || "",
-      cedula_estudiante: initialValues?.cedula_estudiante || "",
-      id_profesores_ciclo: initialValues?.id_profesores_ciclo || "",
-      nota1: initialValues?.nota1 || 0,
-      nota2: initialValues?.nota2 || 0,
+      id: "",
+      cedula_estudiante: "",
+      id_profesores_ciclo: "",
+      nota1: 0,
+      nota2: 0,
     },
     validate: {
       id: (value) => (!value ? "El ID es obligatorio" : null),
@@ -41,6 +41,19 @@ export function MatriculaForm({
       nota2: (value) => (value < 0 || value > 10 ? "La nota debe estar entre 0 y 10" : null),
     },
   })
+
+  useEffect(() => {
+    if (initialValues) {
+      // Asignamos correctamente los valores iniciales para cedula_estudiante e id_profesores_ciclo
+      form.setValues({
+        id: initialValues.id || "",
+        cedula_estudiante: initialValues.cedula_estudiante || "",
+        id_profesores_ciclo: initialValues.id_profesores_ciclo || "",
+        nota1: initialValues.nota1 ?? 0,
+        nota2: initialValues.nota2 ?? 0,
+      })
+    }
+  }, [initialValues])
 
   const handleSubmit = async (values: Omit<Matricula, "version" | "sup">) => {
     setSubmitting(true)
@@ -54,7 +67,6 @@ export function MatriculaForm({
     }
   }
 
-  // Preparar opciones para los selectores
   const estudiantesOptions = estudiantes.map((est) => ({
     value: est.cedula,
     label: `${est.cedula} - ${est.nombre}`,
@@ -79,7 +91,7 @@ export function MatriculaForm({
               placeholder="Ingrese el ID de la matrícula"
               required
               mb="md"
-              disabled={isEditing}
+              disabled={isEditing} // Solo deshabilitado si es edición
               {...form.getInputProps("id")}
             />
           </Grid.Col>
@@ -91,7 +103,6 @@ export function MatriculaForm({
               data={estudiantesOptions}
               required
               mb="md"
-              disabled={isEditing}
               searchable
               {...form.getInputProps("cedula_estudiante")}
             />
@@ -104,7 +115,6 @@ export function MatriculaForm({
               data={profesoresCicloOptions}
               required
               mb="md"
-              disabled={isEditing}
               searchable
               {...form.getInputProps("id_profesores_ciclo")}
             />
@@ -151,4 +161,3 @@ export function MatriculaForm({
     </Paper>
   )
 }
-

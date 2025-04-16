@@ -1,6 +1,6 @@
 "use client"
 
-import { useState } from "react"
+import { useEffect, useState } from "react"
 import { TextInput, Button, Group, Paper, Title } from "@mantine/core"
 import { useForm } from "@mantine/form"
 import type { Estudiante } from "@/types/estudiante"
@@ -12,7 +12,12 @@ interface EstudianteFormProps {
   onCancel?: () => void
 }
 
-export function EstudianteForm({ onSubmit, initialValues, isEditing = false, onCancel }: EstudianteFormProps) {
+export function EstudianteForm({
+  onSubmit,
+  initialValues,
+  isEditing = false,
+  onCancel,
+}: EstudianteFormProps) {
   const [submitting, setSubmitting] = useState(false)
 
   const form = useForm({
@@ -25,6 +30,16 @@ export function EstudianteForm({ onSubmit, initialValues, isEditing = false, onC
       nombre: (value) => (!value ? "El nombre es obligatorio" : null),
     },
   })
+
+  // 🔁 Actualiza los campos cuando cambian los initialValues
+  useEffect(() => {
+    if (initialValues) {
+      form.setValues({
+        cedula: initialValues.cedula,
+        nombre: initialValues.nombre,
+      })
+    }
+  }, [initialValues])
 
   const handleSubmit = async (values: Omit<Estudiante, "version">) => {
     setSubmitting(true)
@@ -45,14 +60,26 @@ export function EstudianteForm({ onSubmit, initialValues, isEditing = false, onC
       </Title>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput
-          label="Cédula"
-          placeholder="Ingrese la cédula del estudiante"
-          required
-          mb="md"
-          disabled={isEditing}
-          {...form.getInputProps("cedula")}
-        />
+        {isEditing ? (
+          <>
+            <TextInput
+              label="Cédula"
+              required
+              mb="md"
+              value={form.values.cedula}
+              disabled
+            />
+            <input type="hidden" name="cedula" value={form.values.cedula} />
+          </>
+        ) : (
+          <TextInput
+            label="Cédula"
+            placeholder="Ingrese la cédula del estudiante"
+            required
+            mb="md"
+            {...form.getInputProps("cedula")}
+          />
+        )}
 
         <TextInput
           label="Nombre"
@@ -76,4 +103,3 @@ export function EstudianteForm({ onSubmit, initialValues, isEditing = false, onC
     </Paper>
   )
 }
-
