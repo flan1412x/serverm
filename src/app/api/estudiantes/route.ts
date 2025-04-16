@@ -38,7 +38,7 @@ export async function POST(request: NextRequest) {
     // Enviar al middleware si el user-agent no es del middleware
     const userAgent = request.headers.get("user-agent") || ""
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/estudiantes", "POST", { ...nuevoEstudiante, userAgent })
+      await sendToMiddleware("/api/estudiantes", "POST", { ...nuevoEstudiante, userAgent })
     }
 
     return NextResponse.json({ success: true, data: nuevoEstudiante }, { status: 201 })
@@ -78,7 +78,7 @@ export async function PUT(request: NextRequest) {
     const userAgent = request.headers.get("user-agent") || ""
     console.log("User-Agent:", userAgent);
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/estudiantes", "PUT", { ...estudianteActualizado, userAgent })
+      await sendToMiddleware("/api/estudiantes", "PUT", { ...estudianteActualizado, userAgent })
     }
 
     return NextResponse.json({ success: true, data: estudianteActualizado })
@@ -110,7 +110,7 @@ export async function DELETE(request: NextRequest) {
     // Enviar al middleware si el user-agent no es del middleware
     const userAgent = request.headers.get("user-agent") || ""
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/estudiantes", "DELETE", { cedula, userAgent })
+      await sendToMiddleware("/api/estudiantes", "DELETE", { cedula, userAgent })
     }
 
     return NextResponse.json({ success: true, message: "Estudiante eliminado correctamente" })

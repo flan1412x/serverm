@@ -56,7 +56,7 @@ export async function POST(request: NextRequest) {
     // Enviar al middleware si el user-agent no es del middleware
     const userAgent = request.headers.get("user-agent") || ""
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/profesores_ciclo", "POST", { ...nuevoProfesorCiclo, userAgent })
+      await sendToMiddleware("/api/profesores_ciclo", "POST", { ...nuevoProfesorCiclo, userAgent })
     }
 
     return NextResponse.json({ success: true, data: nuevoProfesorCiclo }, { status: 201 })
@@ -107,7 +107,7 @@ export async function PUT(request: NextRequest) {
     // Enviar al middleware si el user-agent no es del middleware
     const userAgent = request.headers.get("user-agent") || ""
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/profesores_ciclo", "PUT", { ...profesorCicloActualizado, userAgent })
+      await sendToMiddleware("/api/profesores_ciclo", "PUT", { ...profesorCicloActualizado, userAgent })
     }
 
     return NextResponse.json({ success: true, data: profesorCicloActualizado })
@@ -144,7 +144,7 @@ export async function DELETE(request: NextRequest) {
     // Enviar al middleware si el user-agent no es del middleware
     const userAgent = request.headers.get("user-agent") || ""
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/profesores_ciclo", "DELETE", { id, userAgent })
+      await sendToMiddleware("/api/profesores_ciclo", "DELETE", { id, userAgent })
     }
 
     return NextResponse.json({ success: true, message: "Profesor-Ciclo eliminado correctamente" })

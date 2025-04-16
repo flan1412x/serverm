@@ -41,7 +41,7 @@ export async function POST(request: NextRequest) {
 
     // Enviar al middleware si el user-agent no es del middleware
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/asignaturas", "POST", { ...nuevaAsignatura, userAgent })
+      await sendToMiddleware("/api/asignaturas", "POST", { ...nuevaAsignatura, userAgent })
     }
 
     return NextResponse.json({ success: true, data: nuevaAsignatura }, { status: 201 })
@@ -83,7 +83,7 @@ export async function PUT(request: NextRequest) {
 
     // Enviar al middleware si el user-agent no es del middleware
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/asignaturas", "PUT", { ...asignaturaActualizada, userAgent })
+      await sendToMiddleware("/api/asignaturas", "PUT", { ...asignaturaActualizada, userAgent })
     }
 
     return NextResponse.json({ success: true, data: asignaturaActualizada })
@@ -118,7 +118,7 @@ export async function DELETE(request: NextRequest) {
 
     // Enviar al middleware si el user-agent no es del middleware
     if (userAgent !== "middleware") {
-      await sendToMiddleware("/asignaturas", "DELETE", { id, userAgent })
+      await sendToMiddleware("/api/asignaturas", "DELETE", { id, userAgent })
     }
 
     return NextResponse.json({ success: true, message: "Asignatura eliminada correctamente" })
