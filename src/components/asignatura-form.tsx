@@ -45,14 +45,28 @@ export function AsignaturaForm({ onSubmit, initialValues, isEditing = false, onC
       </Title>
 
       <form onSubmit={form.onSubmit(handleSubmit)}>
-        <TextInput
-          label="ID"
-          placeholder="Ingrese el ID de la asignatura"
-          required
-          mb="md"
-          disabled={isEditing}
-          {...form.getInputProps("id")}
-        />
+            
+      <TextInput
+      label="ID"
+      required
+      mb="md"
+      value={form.values.id}
+      disabled
+    />
+    <input type="hidden" name="id" value={form.values.id} />
+  
+ 
+  <TextInput
+    label="ID"
+    placeholder="Ingrese el ID de la asignatura"
+    required
+    mb="md"
+    {...form.getInputProps("id")}
+  />
+
+
+
+
 
         <TextInput
           label="Nombre de la Asignatura"
